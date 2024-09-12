@@ -107,6 +107,9 @@ nav {
     justify-content: center;
     margin: 30px 0 0 0;
 }
+.banner_txt a:hover{
+    opacity: 0.8;
+}
 
 .banner_img img {
     height: 500px;
