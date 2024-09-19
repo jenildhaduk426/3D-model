@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="utf-8" />
+     <title>3D Model</title>
+
+     <!-- fonts -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+     <!-- font awesome CDN -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet">
+
+     <style>
+          /* fonts */
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap');
+
+          body,
+          html {
+               margin: 0;
+               height: 400vh;
+               font-family: "Outfit", system-ui;
+               scrollbar-width: none;
+          }
+
+          body {
+               background-color: black;
+               position: relative;
+          }
+
+          model-viewer {
+               height: 95vh;
+               width: 100%;
+               position: fixed;
+          }
+
+          @media (max-width:1700px) {
+               model-viewer {
+                    height: 70vh;
+                    margin: 150px 0 0 0;
+               }
+          }
+
+          .text-container {
+               position: fixed;
+               width: 100%;
+               height: 100vh;
+          }
+
+          .text-container h1 {
+               color: white;
+               text-align: center;
+               font-size: 50px;
+               letter-spacing: 20px;
+               position: relative;
+               overflow: hidden;
+               font-family: "Oxanium", sans-serif;
+          }
+
+          .text-container h1 span {
+               color: #0F0;
+               display: inline-block;
+               opacity: 0;
+               transform: translateY(100%);
+               animation: reveal 1s forwards;
+          }
+
+          .text-container h1 span:nth-child(1) {
+               animation-delay: 0.3s;
+          }
+
+          .text-container h1 span:nth-child(2) {
+               animation-delay: 0.6s;
+          }
+
+          .text-container h1 span:nth-child(3) {
+               animation-delay: 0.9s;
+          }
+
+          @keyframes reveal {
+               to {
+                    opacity: 1;
+                    transform: translateY(0);
+               }
+          }
+
+          .text-container p {
+               opacity: 0;
+               transform: translateY(50px);
+               transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+               font-size: 16px;
+               max-width: 20%;
+               font-family: "Outfit", system-ui;
+               color: rgb(163, 163, 163);
+          }
+
+          .text-container p span {
+               color: rgb(255, 255, 255);
+               font-weight: 500 !important;
+          }
+
+          .text-container p.show {
+               opacity: 1;
+               transform: translateY(0);
+               transition: 0.3s;
+          }
+
+          .text-container p.show:hover {
+               color: #ffffff;
+          }
+
+          .left,
+          .right {
+               position: absolute;
+               font-size: 20px !important;
+          }
+
+          .left-top {
+               left: 150px;
+               top: 70px;
+          }
+
+          .left-bottom {
+               left: 150px;
+               bottom: 70px;
+          }
+
+          .right-top {
+               right: 150px;
+               top: 70px;
+          }
+
+          .right-bottom {
+               right: 150px;
+               bottom: 70px;
+          }
+
+          b {
+               font-size: 28px !important;
+               color: #0F0;
+          }
+
+          /* Code fragment container */
+          #code-fragment {
+               position: fixed;
+               top: 0;
+               left: 0;
+               width: 100%;
+               height: 100%;
+               pointer-events: none;
+               overflow: hidden;
+               z-index: -1;
+               font-family: monospace;
+               color: rgba(0, 255, 0, 0.2);
+               font-size: 18px;
+          }
+
+          .fragment {
+               position: absolute;
+               white-space: nowrap;
+               opacity: 0;
+               animation: fragment-animation 5s infinite;
+          }
+
+          @keyframes fragment-animation {
+               0% {
+                    opacity: 1;
+                    transform: translateY(-100%);
+               }
+
+               50% {
+                    opacity: 0.5;
+                    transform: translateY(0);
+               }
+
+               100% {
+                    opacity: 0;
+                    transform: translateY(100%);
+               }
+          }
+
+
+
+
+          #new-section {
+               position: absolute;
+               width: 100%;
+               bottom: -350vh;
+               left: 0;
+               height: auto;
+               background-color: white;
+               border-radius: 32px;
+               opacity: 0;
+               transition: opacity 0.3s ease-in-out;
+          }
+
+          @media (min-height:768px) {
+               #new-section {
+                    position: absolute;
+                    width: 100%;
+                    bottom: -300vh;
+               }
+          }
+
+          @media (min-height:850px) {
+               #new-section {
+                    position: absolute;
+                    width: 100%;
+                    bottom: -220vh;
+               }
+          }
+
+          @media (min-height:970px) {
+               #new-section {
+                    position: absolute;
+                    width: 100%;
+                    bottom: -150vh;
+               }
+          }
+
+          @media (min-height:1150px) {
+               #new-section {
+                    position: absolute;
+                    width: 100%;
+                    bottom: -100vh;
+               }
+          }
+
+          .new {
+               padding: 3%;
+          }
+
+          .new h2 {
+               text-align: center;
+               text-transform: uppercase;
+               color: rgb(53, 53, 53);
+               font-size: 22px;
+          }
+
+          .new table {
+               text-align: center;
+               border: 1px rgb(224, 224, 224) solid;
+               width: 100%;
+          }
+
+          .new table td,
+          .new table th {
+               text-align: center;
+               border: 1px rgb(224, 224, 224) solid;
+          }
+
+          .fa-check {
+               color: rgb(0, 134, 0);
+          }
+     </style>
+</head>
+
+<body>
+     <main>
+          <model-viewer id="model" src="model.glb" disable-zoom alt="cube" background-color="#455A64"></model-viewer>
+
+          <div class="text-container">
+               <h1>R<span>e</span>ptil<span>e</span></h1>
+               <p class="left left-top text-reveal" id="text1"><b>1. </b> <span>Easy WiFi Control : </span>Full control
+                    with your
+                    web
+                    browser. Desktop or mobile.</p>
+               <p class="left left-bottom" id="text2"><b>2. </b><span>Keystroke Injection : </span>Instant DuckyScript
+                    payloads.
+                    No recompiling or reprograming, just click run! And with industry-leading 890keys/sec speeds.</p>
+               <p class="right right-top" id="text3"><b>3. </b><span>Lots of Payload slots : </span>Basic model comes
+                    with 8 slots. Elite has extra storage allowing up to 200 slots!</p>
+               <p class="right right-bottom" id="text4"><b>4. </b><span>Global Keymaps : </span>With 192 keymaps already
+                    built in, you can target machine across the world.</p>
+               <p class="left left-top" id="text5"><b>5. </b><span>Built in IDE : </span>The WebUi not only provides
+                    100%
+                    of the controls, but also gives you helpful feedback to catch syntax errors while repidly building
+                    payloads.</p>
+               <p class="left left-bottom" id="text6"><b>6. </b><span>Mobile Payloads : </span>Cables with a USB-C
+                    active
+                    end, or Directional C to C, can automatically transmit to mobile devices with USB-C connector.
+                    Connect just the active end!</p>
+               <p class="right right-top" id="text7"><b>7. </b><span>Hardware Keylogger : </span>Elite models contain a
+                    hardware keylogger designed for FullSpeed USB keyboards with detachable cables. Store up to 650,000
+                    keystrokes. For tested keyboards & more info go here.</p>
+               <p class="right right-bottom" id="text8"><b>8. </b><span>HIDX StealthLink : </span>Elite models: setup a
+                    bidirectional tunnel from Target Host > O.MG > Control Machine.</p>
+               <p class="left left-top" id="text9"><b>9. </b><span>Encrypted Network C2 : </span>Elite models: Use an
+                    encrypted connection to access & control your O.MG from anywhere. Then disable the onboard WebUi to
+                    hide and protect your O.MG on untrusted networks. Compatible with any server that runs python.</p>
+               <p class="left left-bottom" id="text10"><b>10. </b><span>Self-Destruct : </span>Make your legal team
+                    happy
+                    by ensuring sensitive payloads & loot are gone, and the O.MG Cable is fully inert. (recoverable with
+                    O.MG Programmer)</p>
+               <p class="right right-top" id="text11"><b>11. </b><span>Geo-Fencing : </span>Trigger payloads or other
+                    action based on location. Keep your tool from falling out scope! Ex: self-destruct if someone takes
+                    the O.MG Cable home.</p>
+          </div>
+
+          <div id="circle-container"></div>
+     </main>
+
+
+
+
+     <section id="new-section">
+          <div class="new">
+               <h2>Custom build your O.MG Cable with 4 easy steps:</h2>
+               <h4 style="font-size: 18px;">1: Choose a tier: </h4>
+               <table border="1" cellpadding="15" cellspacing="0">
+                    <tr>
+                         <th>O.MG Cable Tier</th>
+                         <th>Basic (Gen 1)</th>
+                         <th>Elite (Gen 3)</th>
+                    </tr>
+                    <tr>
+                         <td>Keystroke Injection (DuckyScript™)</td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Mouse Injection</td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Payload Slots</td>
+                         <td style="color: rgb(0, 134, 0);">8</td>
+                         <td style="color: rgb(0, 134, 0);">50-200</td>
+                    </tr>
+                    <tr>
+                         <td>Max Payload Speed</td>
+                         <td style="color: rgb(0, 134, 0);">120 keys/sec</td>
+                         <td style="color: rgb(0, 134, 0);">890 keys/sec</td>
+                    </tr>
+                    <tr>
+                         <td>Self-Destruct</td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Geo-Fencing</td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>WiFi Triggers</td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>FullSpeed USB Hardware Keylogger</td>
+                         <td></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>HIDX StealthLink</td>
+                         <td></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Encrypted Network C2</td>
+                         <td></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Extended WiFi range</td>
+                         <td></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+                    <tr>
+                         <td>Stealth-Optimized Power Draw</td>
+                         <td></td>
+                         <td><i class="fa-solid fa-check"></i></td>
+                    </tr>
+               </table>
+
+
+               <h4 style="font-size: 18px;">2: Choose an active end: </h4>
+               <ul style="text-decoration: dotted;">
+                    <li><span style="font-weight: 600; font-size: 18px;">USB-A:</span> payloads deliver from the USB-A
+                         connector. Available with C, Micro, or Lightning passive ends.</li>
+                    <li><span style="font-weight: 600; font-size: 18px;">USB-C:</span> payloads deliver from the USB-C
+                         connector. Available with Micro or Lightning passive ends.</li>
+                    <li><span style="font-weight: 600; font-size: 18px;">Directional C to C:</span> This cable changes
+                         behavior depending on what direction you connect it, unlike a normal C to C cable. Connect the
+                         active end to a USB host, it behaves like a normal USB 2.0 cable & transmits payloads out the
+                         active end. Or connect just the active end to a mobile device for mobile payload delivery. On
+                         TPE variants, the active end is marked with a discreet logo. For Woven variants, the active end
+                         is identified by a removable tag, but is otherwise unmarked. If required, you can add your own
+                         markings. If you forget which end is active, an O.MG Programmer's "OMG" light can be used.</li>
+               </ul>
+
+
+               <h4 style="font-size: 18px;">3: Choose the passthrough end & color: </h4>
+               <p>This is the camouflage that lets your O.MG Cable blend in with whatever environment you are working
+                    with. Just pick the connector and color. All cables behave as a normal USB 2.0 cable when the
+                    implant is dormant: 480mbps data transfer & 5v charging (supplied to the passthrough end) when the
+                    active end is connected to a USB Host. </p>
+
+               <h4 style="font-size: 18px;">4: Add an O.MG Programmer: </h4>
+               <p>Due to the advanced capabilities of the O.MG Cable, regulations require that they are shipped
+                    "deactivated". An O.MG Programmer lets you activate them using an easy 3 step desktop web-browser
+                    utility. This will also allow you to upgrade to the latest firmware, and recover if you lock
+                    yourself out. The O.MG Programmer is universal for all O.MG Devices, so you only need one for all
+                    your O.MG Cables, O.MG Adapters, O.MG UnBlockers, and O.MG Plugs.</p>
+
+               <hr>
+
+
+               <h2>O.MG Cable Features</h2>
+
+               <div style="display: flex;">
+                    <div style="width: 50%;">
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="signal.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Easy WiFi Control:</h4>
+                                   <p>Full control with your web browser. Desktop or mobile.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="duck.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Keystroke Injection:</h4>
+                                   <p>Instant DuckyScript payloads. No recompiling or reprogramming, just click run! And
+                                        with industry-leading 890keys/sec speeds.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="coins.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Lots of Payload slots:</h4>
+                                   <p>Basic model comes with 8 slots. Elite has extra storage allowing up to 200 slots!
+                                   </p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="global-navigation.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Global Keymaps:</h4>
+                                   <p>With 192 keymaps already built in, you can target machines across the world.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="help.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Built in IDE:</h4>
+                                   <p>The WebUI not only provides 100% of the controls, but also gives you helpful
+                                        feedback to catch syntax errors while rapidly building payloads.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="smartphone.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Mobile Payloads:</h4>
+                                   <p>Cables with a USB-C active end, or Directional C to C, can automatically transmit
+                                        to mobile devices with a USB-C connector. Connect just the active end!</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="eye.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Stealth:</h4>
+                                   <p>The implant stays dormant until a payload is deployed. No logs. No detections. The
+                                        cable behaves just like a normal USB 2.0 cable. (5v charging, 480mps data
+                                        transfer) Spoof any USB identifer (VID/PID), extended USB Identifier, and
+                                        network MAC address.</p>
+                              </div>
+                         </div>
+                    </div>
+
+
+
+                    <div style="width: 50%;">
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="keyboard.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Hardware Keylogger:</h4>
+                                   <p>Elite models contain a passive hardware keylogger designed for FullSpeed USB
+                                        keyboards with detachable cables. Store up to 650,000 keystrokes. For tested
+                                        keyboards & more info go <a
+                                             href="https://github.com/O-MG/O.MG-Firmware/wiki/Keylogger">here</a>.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="incognito.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">HIDX StealthLink:</h4>
+                                   <p>Elite models: setup a bidirectional tunnel from Target Host > O.MG > Control
+                                        Machine.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="organization-chart.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Encrypted Network C2:</h4>
+                                   <p>Elite models: Use an encrypted connection to access & control your O.MG from
+                                        anywhere. Then disable the onboard WebUI to hide and protect your O.MG on
+                                        untrusted networks. Compatible with any server that runs python.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="clean.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Self-Destruct:</h4>
+                                   <p>Make your legal team happy by ensuring sensitive payloads & loot are gone, and the
+                                        O.MG Cable is fully inert. (recoverable with O.MG Programmer)</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="location.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">Geo-Fencing:</h4>
+                                   <p>Trigger payloads or other actions based on location. Keep your tool from falling
+                                        out of scope! Ex: self-destruct if someone takes the O.MG Cable home.</p>
+                              </div>
+                         </div>
+                         <div style="display: flex; gap: 20px; margin: 20px 0;">
+                              <img src="satellite.png" alt="icon" style="height: 30px;">
+                              <div>
+                                   <h4 style="font-size: 18px; margin: 0 0 -10px 0;">WiFi Triggers:</h4>
+                                   <p>Trigger payloads at long range with a single beacon.</p>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+
+          </div>
+     </section>
+
+     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+
+     <script>
+          const modelViewer = document.getElementById('model');
+          const textElements = Array.from(document.querySelectorAll('.text-container p'));
+          const newSection = document.getElementById('new-section');
+
+          window.addEventListener('scroll', () => {
+               const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+               const mainHeight = document.querySelector('main').offsetHeight;
+
+               // Rotate model based on scroll position
+               const rotation = scrollTop * 0.5;
+               modelViewer.setAttribute('camera-orbit', `${rotation}deg 40deg auto`);
+
+               // Show/hide text elements based on scroll position
+               textElements.forEach((element, index) => {
+                    const startScroll = index * 200; // 200px per text block
+                    const endScroll = (index + 1) * 200;
+
+                    if (scrollTop >= startScroll && scrollTop < endScroll) {
+                         element.classList.add('show');
+                    } else {
+                         element.classList.remove('show');
+                    }
+               });
+
+               // Show the new section when scrolled past the main content
+               if (scrollTop >= mainHeight) {
+                    newSection.style.opacity = '1'; // Make new section visible
+               } else {
+                    newSection.style.opacity = '0'; // Hide new section
+               }
+          });
+
+          // Generate code fragments
+          const codeFragmentContainer = document.createElement('div');
+          codeFragmentContainer.id = 'code-fragment';
+          document.body.appendChild(codeFragmentContainer);
+
+          const fragments = [
+               'for (let i = 0; i < 10; i++) {',
+               'console.log("Hacking...");',
+               'while (true) {',
+               'break;',
+               'return;',
+               'function exploit() {}',
+               'if (user.isAuthenticated) {',
+               'try {',
+               'catch (error) {',
+               'finally {',
+               'async function fetchData(url) {',
+               'await fetch(url);',
+               'let data = await response.json();',
+               'class HackerTool {',
+               'constructor() {',
+               'this.data = [];',
+               'connect();',
+               'disconnect();',
+               'updateSettings(settings);',
+               'let payload = new Payload();',
+               'payload.execute();',
+               'setTimeout(() => {',
+               'document.querySelector("#output").innerText = "Done";',
+               'process.stdin.resume();',
+               'process.on("exit", function() {',
+               'console.error("Error occurred!");',
+               'debugger;',
+               'throw new Error("Something went wrong");',
+               '/* TODO: Add more functions */',
+               'const module = require("module");',
+               'import { component } from "library";',
+               'export default function() {}',
+               'let config = { debug: true };',
+               'Object.keys(config).forEach(key => {',
+               'config[key] = process.env[key];',
+               '/* Ensure sensitive data is encrypted */',
+               'let encryptedData = encrypt(data);',
+               'function decrypt(encryptedData) {',
+               'return decryptedData;',
+               'if (isLoggedIn) {',
+               'user.updateProfile();',
+               'else {',
+               'console.log("Please log in");',
+               'switch (command) {',
+               'case "start":',
+               'case "stop":',
+               'default:',
+               'console.warn("Unknown command");',
+               'return;',
+               'let handler = new Handler();',
+               'handler.process(data);',
+               'function init() {',
+               'setup();',
+               'initialize();',
+               'console.info("Initialization complete");'
+          ];
+
+          for (let i = 0; i < 50; i++) {
+               const fragment = document.createElement('div');
+               fragment.className = 'fragment';
+               fragment.textContent = fragments[Math.floor(Math.random() * fragments.length)];
+
+               // Random position
+               fragment.style.left = `${Math.random() * 100}%`;
+               fragment.style.top = `${Math.random() * 100}%`;
+
+               // Random animation delay
+               const delay = Math.random() * 5;
+               fragment.style.animationDelay = `${delay}s`;
+
+               codeFragmentContainer.appendChild(fragment);
+          }
+
+
+
+
+     </script>
+</body>
+
+</html>
